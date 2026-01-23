@@ -14,18 +14,24 @@ interface ChatMessage {
 
 interface UseAIOptions {
   onError?: (error: Error) => void;
-  onSuccess?: (response: any) => void;
+  onSuccess?: (response: unknown) => void;
 }
 
-export function useAI(options?: UseAIOptions) {
+export function useAI(hookOptions?: UseAIOptions) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const handleSuccess = hookOptions?.onSuccess;
+  const handleError = hookOptions?.onError;
 
   const chat = useCallback(
     async (
       messages: ChatMessage[],
-      options?: { temperature?: number; max_tokens?: number; model?: string },
+      chatOptions?: {
+        temperature?: number;
+        max_tokens?: number;
+        model?: string;
+      },
     ) => {
       setLoading(true);
       setError(null);
@@ -36,7 +42,7 @@ export function useAI(options?: UseAIOptions) {
         const response = await fetch("/api/ai/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages, ...options }),
+          body: JSON.stringify({ messages, ...chatOptions }),
           signal: abortControllerRef.current.signal,
         });
 
@@ -46,19 +52,19 @@ export function useAI(options?: UseAIOptions) {
         }
 
         const data = await response.json();
-        options?.onSuccess?.(data);
+        handleSuccess?.(data);
         return data;
       } catch (err) {
         const error = err instanceof Error ? err : new Error(String(err));
         setError(error);
-        options?.onError?.(error);
+        handleError?.(error);
         throw error;
       } finally {
         setLoading(false);
         abortControllerRef.current = null;
       }
     },
-    [],
+    [handleError, handleSuccess],
   );
 
   const classifyIntent = useCallback(
@@ -79,44 +85,51 @@ export function useAI(options?: UseAIOptions) {
         }
 
         const data = await response.json();
+        handleSuccess?.(data);
         return data; // { intent, confidence }
       } catch (err) {
         const error = err instanceof Error ? err : new Error(String(err));
         setError(error);
+        handleError?.(error);
         throw error;
       } finally {
         setLoading(false);
       }
     },
-    [],
+    [handleError, handleSuccess],
   );
 
-  const analyzeSentiment = useCallback(async (text: string) => {
-    setLoading(true);
-    setError(null);
+  const analyzeSentiment = useCallback(
+    async (text: string) => {
+      setLoading(true);
+      setError(null);
 
-    try {
-      const response = await fetch("/api/ai/sentiment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
-      });
+      try {
+        const response = await fetch("/api/ai/sentiment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text }),
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `HTTP ${response.status}`);
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || `HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        handleSuccess?.(data);
+        return data; // { sentiment, score }
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(String(err));
+        setError(error);
+        handleError?.(error);
+        throw error;
+      } finally {
+        setLoading(false);
       }
-
-      const data = await response.json();
-      return data; // { sentiment, score }
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error(String(err));
-      setError(error);
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+    [handleError, handleSuccess],
+  );
 
   const healthCheck = useCallback(async () => {
     try {

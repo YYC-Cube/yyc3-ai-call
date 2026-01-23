@@ -229,7 +229,7 @@ Reply with JSON: {"intent": "<category>", "confidence": <0-1>}`;
       throw new Error(`Failed to fetch models: ${response.statusText}`);
     }
     const data = await response.json();
-    return data.data?.map((m: any) => m.id) || [];
+    return data.data?.map((m: { id: string }) => m.id) || [];
   }
 
   /**

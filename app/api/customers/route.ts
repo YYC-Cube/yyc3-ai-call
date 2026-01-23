@@ -33,7 +33,7 @@ interface ApiResponse<T> {
   error?: {
     code: string;
     message: string;
-    details?: Record<string, any>;
+    details?: Record<string, unknown>;
   };
   timestamp: string;
 }
@@ -79,18 +79,31 @@ export async function GET(request: NextRequest) {
       // ... 更多mock数据
     ];
 
+    const filtered = mockCustomers.filter((customer) => {
+      const matchSearch = search
+        ? [customer.name, customer.email, customer.phone]
+            .filter(Boolean)
+            .some((field) =>
+              field?.toLowerCase().includes(search.toLowerCase()),
+            )
+        : true;
+      const matchStatus = status ? customer.status === status : true;
+      return matchSearch && matchStatus;
+    });
+
+    const total = filtered.length;
+    const pages = Math.max(1, Math.ceil(total / limit));
+    const start = (page - 1) * limit;
+    const customers = filtered.slice(start, start + limit);
+
     return NextResponse.json<
-      ApiResponse<{
-        customers: Customer[];
-        total: number;
-        pages: number;
-      }>
+      ApiResponse<{ customers: Customer[]; total: number; pages: number }>
     >({
       success: true,
       data: {
-        customers: mockCustomers,
-        total: mockCustomers.length,
-        pages: Math.ceil(mockCustomers.length / limit),
+        customers,
+        total,
+        pages,
       },
       timestamp: new Date().toISOString(),
     });

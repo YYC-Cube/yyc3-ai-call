@@ -5,12 +5,19 @@ import * as ProgressPrimitive from "@radix-ui/react-progress";
 
 import { cn } from "@/lib/utils";
 
+type ProgressProps = React.ComponentPropsWithoutRef<
+  typeof ProgressPrimitive.Root
+> & {
+  colorScheme?: string;
+};
+
 const Progress = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
+  ProgressProps
 >(({ className, value, ...props }, ref) => {
   // 过滤掉 colorScheme 等非 DOM 属性
-  const { colorScheme, ...domProps } = props as any;
+  const { colorScheme: _colorScheme, ...domProps } = props;
+  void _colorScheme; // mark as intentionally unused
 
   return (
     <ProgressPrimitive.Root

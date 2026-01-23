@@ -1,10 +1,11 @@
-"use client"
+"use client";
 
-import { Switch } from "@/components/ui/switch"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Image from "next/image";
+import { Switch } from "@/components/ui/switch";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -12,24 +13,36 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import SmartCallSystem from "../smart-call-system"
-import CustomerProfile360 from "../customer-profile-360"
-import MarketingAutomation from "../marketing-automation"
-import CustomerManagement from "../customer-management"
-import IntelligentPhoneDatabase from "../intelligent-phone-database"
-import IntelligentForms from "../intelligent-forms"
-import MobileApplication from "../mobile-application"
-import DataAnalytics from "../data-analytics"
-import { Settings, Phone, Users, BarChart3, Smartphone, FileText, Database, Target, Bell, Menu, X } from "lucide-react"
+} from "@/components/ui/dialog";
+import SmartCallSystem from "../smart-call-system";
+import CustomerProfile360 from "../customer-profile-360";
+import MarketingAutomation from "../marketing-automation";
+import CustomerManagement from "../customer-management";
+import IntelligentPhoneDatabase from "../intelligent-phone-database";
+import IntelligentForms from "../intelligent-forms";
+import MobileApplication from "../mobile-application";
+import DataAnalytics from "../data-analytics";
+import {
+  Settings,
+  Phone,
+  Users,
+  BarChart3,
+  Smartphone,
+  FileText,
+  Database,
+  Target,
+  Bell,
+  Menu,
+  X,
+} from "lucide-react";
 
 export default function CustomerServicePlatform() {
-  const [activeTab, setActiveTab] = useState("overview")
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false)
-  const [isDarkMode, setIsDarkMode] = useState(false)
-  const [isProfileOpen, setIsProfileOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState("overview");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   // 模拟实时数据
   const realTimeStats = {
@@ -45,7 +58,7 @@ export default function CustomerServicePlatform() {
     totalAgents: 25,
     systemHealth: 98.7,
     responseTime: "1.2s",
-  }
+  };
 
   const notifications = [
     {
@@ -72,32 +85,34 @@ export default function CustomerServicePlatform() {
       type: "success",
       unread: false,
     },
-  ]
+  ];
 
   const handleTabChange = (value: string) => {
-    setActiveTab(value)
-    setIsMobileMenuOpen(false)
-  }
+    setActiveTab(value);
+    setIsMobileMenuOpen(false);
+  };
 
   const handleRefresh = () => {
-    window.location.reload()
-  }
+    window.location.reload();
+  };
 
   const handleExport = () => {
     const data = {
       stats: realTimeStats,
       timestamp: new Date().toISOString(),
-    }
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = `dashboard-data-${new Date().toISOString().split("T")[0]}.json`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-  }
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `dashboard-data-${new Date().toISOString().split("T")[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div
@@ -111,14 +126,23 @@ export default function CustomerServicePlatform() {
           <div className="flex items-center justify-between h-16">
             {/* 左侧 Logo 和标题 */}
             <div className="flex items-center gap-4">
-              <img src="/logo.png" alt="YYC³ AI" className="h-8 w-auto sm:h-10" />
+              <Image
+                src="/yyc3-pwa-icon.png"
+                alt="YYC³ AI"
+                width={120}
+                height={40}
+                priority
+                className="h-8 w-auto sm:h-10"
+              />
               <div className="hidden sm:block">
                 <h1
                   className={`text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent`}
                 >
                   YYC³ AI Intelligent Calling
                 </h1>
-                <p className={`text-xs sm:text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+                <p
+                  className={`text-xs sm:text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
+                >
                   AI 驱动的智能外呼系统
                 </p>
               </div>
@@ -132,12 +156,18 @@ export default function CustomerServicePlatform() {
             {/* 右侧操作按钮 */}
             <div className="flex items-center gap-2 sm:gap-4">
               {/* 系统状态 */}
-              <Badge variant="secondary" className="hidden sm:flex bg-green-100 text-green-800">
+              <Badge
+                variant="secondary"
+                className="hidden sm:flex bg-green-100 text-green-800"
+              >
                 系统运行正常
               </Badge>
 
               {/* 通知按钮 */}
-              <Dialog open={isNotificationOpen} onOpenChange={setIsNotificationOpen}>
+              <Dialog
+                open={isNotificationOpen}
+                onOpenChange={setIsNotificationOpen}
+              >
                 <DialogTrigger asChild>
                   <Button
                     variant="outline"
@@ -153,9 +183,13 @@ export default function CustomerServicePlatform() {
                     <span className="hidden sm:inline ml-2">通知</span>
                   </Button>
                 </DialogTrigger>
-                <DialogContent className={`max-w-md ${isDarkMode ? "bg-gray-800 border-gray-700" : ""}`}>
+                <DialogContent
+                  className={`max-w-md ${isDarkMode ? "bg-gray-800 border-gray-700" : ""}`}
+                >
                   <DialogHeader>
-                    <DialogTitle className={`flex items-center gap-2 ${isDarkMode ? "text-white" : ""}`}>
+                    <DialogTitle
+                      className={`flex items-center gap-2 ${isDarkMode ? "text-white" : ""}`}
+                    >
                       <Bell className="w-5 h-5 text-blue-600" />
                       系统通知
                     </DialogTitle>
@@ -176,17 +210,25 @@ export default function CustomerServicePlatform() {
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <div className={`font-medium text-sm ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                            <div
+                              className={`font-medium text-sm ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                            >
                               {notification.title}
                             </div>
-                            <div className={`text-sm mt-1 ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+                            <div
+                              className={`text-sm mt-1 ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}
+                            >
                               {notification.message}
                             </div>
-                            <div className={`text-xs mt-2 ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                            <div
+                              className={`text-xs mt-2 ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}
+                            >
                               {notification.time}
                             </div>
                           </div>
-                          {notification.unread && <div className="w-2 h-2 bg-blue-500 rounded-full ml-2 mt-1"></div>}
+                          {notification.unread && (
+                            <div className="w-2 h-2 bg-blue-500 rounded-full ml-2 mt-1"></div>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -197,7 +239,7 @@ export default function CustomerServicePlatform() {
                       size="sm"
                       className="flex-1 bg-transparent"
                       onClick={() => {
-                        notifications.forEach((n) => (n.unread = false))
+                        notifications.forEach((n) => (n.unread = false));
                       }}
                     >
                       全部已读
@@ -225,31 +267,56 @@ export default function CustomerServicePlatform() {
                     <span className="hidden sm:inline ml-2">设置</span>
                   </Button>
                 </DialogTrigger>
-                <DialogContent className={`max-w-2xl ${isDarkMode ? "bg-gray-800 border-gray-700" : ""}`}>
+                <DialogContent
+                  className={`max-w-2xl ${isDarkMode ? "bg-gray-800 border-gray-700" : ""}`}
+                >
                   <DialogHeader>
-                    <DialogTitle className={`flex items-center gap-2 ${isDarkMode ? "text-white" : ""}`}>
+                    <DialogTitle
+                      className={`flex items-center gap-2 ${isDarkMode ? "text-white" : ""}`}
+                    >
                       <Settings className="w-5 h-5 text-purple-600" />
                       系统设置
                     </DialogTitle>
-                    <DialogDescription>配置您的智能外呼系统参数和偏好设置</DialogDescription>
+                    <DialogDescription>
+                      配置您的智能外呼系统参数和偏好设置
+                    </DialogDescription>
                   </DialogHeader>
                   <div className="space-y-6 py-4">
                     <div>
-                      <h3 className={`font-semibold mb-3 ${isDarkMode ? "text-white" : "text-gray-900"}`}>外观设置</h3>
+                      <h3
+                        className={`font-semibold mb-3 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                      >
+                        外观设置
+                      </h3>
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
                           <div>
-                            <div className={`font-medium ${isDarkMode ? "text-white" : "text-gray-900"}`}>深色模式</div>
-                            <div className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+                            <div
+                              className={`font-medium ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                            >
+                              深色模式
+                            </div>
+                            <div
+                              className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
+                            >
                               切换到深色主题
                             </div>
                           </div>
-                          <Switch checked={isDarkMode} onCheckedChange={setIsDarkMode} />
+                          <Switch
+                            checked={isDarkMode}
+                            onCheckedChange={setIsDarkMode}
+                          />
                         </div>
                         <div className="flex items-center justify-between">
                           <div>
-                            <div className={`font-medium ${isDarkMode ? "text-white" : "text-gray-900"}`}>自动刷新</div>
-                            <div className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+                            <div
+                              className={`font-medium ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                            >
+                              自动刷新
+                            </div>
+                            <div
+                              className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
+                            >
                               每30秒自动刷新数据
                             </div>
                           </div>
@@ -257,8 +324,14 @@ export default function CustomerServicePlatform() {
                         </div>
                         <div className="flex items-center justify-between">
                           <div>
-                            <div className={`font-medium ${isDarkMode ? "text-white" : "text-gray-900"}`}>声音提醒</div>
-                            <div className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+                            <div
+                              className={`font-medium ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                            >
+                              声音提醒
+                            </div>
+                            <div
+                              className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
+                            >
                               新消息声音提醒
                             </div>
                           </div>
@@ -268,12 +341,22 @@ export default function CustomerServicePlatform() {
                     </div>
 
                     <div>
-                      <h3 className={`font-semibold mb-3 ${isDarkMode ? "text-white" : "text-gray-900"}`}>数据设置</h3>
+                      <h3
+                        className={`font-semibold mb-3 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                      >
+                        数据设置
+                      </h3>
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
                           <div>
-                            <div className={`font-medium ${isDarkMode ? "text-white" : "text-gray-900"}`}>数据缓存</div>
-                            <div className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+                            <div
+                              className={`font-medium ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                            >
+                              数据缓存
+                            </div>
+                            <div
+                              className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
+                            >
                               本地缓存数据以提升性能
                             </div>
                           </div>
@@ -281,8 +364,14 @@ export default function CustomerServicePlatform() {
                         </div>
                         <div className="flex items-center justify-between">
                           <div>
-                            <div className={`font-medium ${isDarkMode ? "text-white" : "text-gray-900"}`}>数据同步</div>
-                            <div className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+                            <div
+                              className={`font-medium ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                            >
+                              数据同步
+                            </div>
+                            <div
+                              className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
+                            >
                               自动同步到云端
                             </div>
                           </div>
@@ -292,11 +381,19 @@ export default function CustomerServicePlatform() {
                     </div>
 
                     <div className="flex gap-2 pt-4 border-t">
-                      <Button variant="outline" onClick={handleExport} className="flex-1 bg-transparent">
+                      <Button
+                        variant="outline"
+                        onClick={handleExport}
+                        className="flex-1 bg-transparent"
+                      >
                         <Database className="w-4 h-4 mr-2" />
                         导出数据
                       </Button>
-                      <Button variant="outline" onClick={handleRefresh} className="flex-1 bg-transparent">
+                      <Button
+                        variant="outline"
+                        onClick={handleRefresh}
+                        className="flex-1 bg-transparent"
+                      >
                         <BarChart3 className="w-4 h-4 mr-2" />
                         刷新数据
                       </Button>
@@ -317,9 +414,13 @@ export default function CustomerServicePlatform() {
                     <span className="hidden sm:inline ml-2">账户</span>
                   </Button>
                 </DialogTrigger>
-                <DialogContent className={`max-w-md ${isDarkMode ? "bg-gray-800 border-gray-700" : ""}`}>
+                <DialogContent
+                  className={`max-w-md ${isDarkMode ? "bg-gray-800 border-gray-700" : ""}`}
+                >
                   <DialogHeader>
-                    <DialogTitle className={`flex items-center gap-2 ${isDarkMode ? "text-white" : ""}`}>
+                    <DialogTitle
+                      className={`flex items-center gap-2 ${isDarkMode ? "text-white" : ""}`}
+                    >
                       <Users className="w-5 h-5 text-green-600" />
                       用户信息
                     </DialogTitle>
@@ -330,11 +431,19 @@ export default function CustomerServicePlatform() {
                         管
                       </div>
                       <div>
-                        <div className={`font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}>系统管理员</div>
-                        <div className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+                        <div
+                          className={`font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                        >
+                          系统管理员
+                        </div>
+                        <div
+                          className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
+                        >
                           admin@yyc-ai.com
                         </div>
-                        <div className={`text-xs ${isDarkMode ? "text-gray-500" : "text-gray-500"}`}>
+                        <div
+                          className={`text-xs ${isDarkMode ? "text-gray-500" : "text-gray-500"}`}
+                        >
                           最后登录：今天 09:30
                         </div>
                       </div>
@@ -353,8 +462,8 @@ export default function CustomerServicePlatform() {
                         variant="outline"
                         className="w-full justify-start bg-transparent"
                         onClick={() => {
-                          setIsProfileOpen(false)
-                          setIsSettingsOpen(true)
+                          setIsProfileOpen(false);
+                          setIsSettingsOpen(true);
                         }}
                       >
                         <Settings className="w-4 h-4 mr-2" />
@@ -373,7 +482,7 @@ export default function CustomerServicePlatform() {
                         className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50 bg-transparent"
                         onClick={() => {
                           if (confirm("确定要退出登录吗？")) {
-                            window.location.href = "/login"
+                            window.location.href = "/login";
                           }
                         }}
                       >
@@ -392,7 +501,11 @@ export default function CustomerServicePlatform() {
                 className={`lg:hidden ${isDarkMode ? "border-gray-600 hover:bg-gray-700" : "hover:bg-gray-50"}`}
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
-                {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+                {isMobileMenuOpen ? (
+                  <X className="w-4 h-4" />
+                ) : (
+                  <Menu className="w-4 h-4" />
+                )}
               </Button>
             </div>
           </div>
@@ -400,7 +513,11 @@ export default function CustomerServicePlatform() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full space-y-6">
+        <Tabs
+          value={activeTab}
+          onValueChange={handleTabChange}
+          className="w-full space-y-6"
+        >
           {/* 桌面端标签导航 */}
           <TabsList
             className={`hidden lg:grid w-full grid-cols-8 mb-8 shadow-lg rounded-xl ${isDarkMode ? "bg-gray-800/80" : "bg-white/80"} backdrop-blur-sm`}
@@ -465,27 +582,77 @@ export default function CustomerServicePlatform() {
 
           {/* 移动端导航菜单 */}
           {isMobileMenuOpen && (
-            <div className={`lg:hidden fixed inset-0 z-50 ${isDarkMode ? "bg-gray-900" : "bg-white"}`}>
+            <div
+              className={`lg:hidden fixed inset-0 z-50 ${isDarkMode ? "bg-gray-900" : "bg-white"}`}
+            >
               <div className="flex flex-col h-full">
                 <div
                   className={`flex items-center justify-between p-4 border-b ${isDarkMode ? "border-gray-700" : "border-gray-200"}`}
                 >
-                  <h2 className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}>功能菜单</h2>
-                  <Button variant="outline" size="sm" onClick={() => setIsMobileMenuOpen(false)}>
+                  <h2
+                    className={`text-lg font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                  >
+                    功能菜单
+                  </h2>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
                     <X className="w-4 h-4" />
                   </Button>
                 </div>
                 <div className="flex-1 overflow-y-auto p-4">
                   <div className="grid grid-cols-2 gap-3">
                     {[
-                      { name: "系统总览", icon: BarChart3, tab: "overview", color: "text-blue-600 bg-blue-50" },
-                      { name: "智能外呼", icon: Phone, tab: "smart-call", color: "text-green-600 bg-green-50" },
-                      { name: "客户360", icon: Users, tab: "customer-360", color: "text-purple-600 bg-purple-50" },
-                      { name: "营销自动化", icon: Target, tab: "marketing", color: "text-pink-600 bg-pink-50" },
-                      { name: "客户管理", icon: Users, tab: "customer-mgmt", color: "text-orange-600 bg-orange-50" },
-                      { name: "号码库", icon: Database, tab: "phone-db", color: "text-teal-600 bg-teal-50" },
-                      { name: "智能表单", icon: FileText, tab: "forms", color: "text-indigo-600 bg-indigo-50" },
-                      { name: "移动应用", icon: Smartphone, tab: "mobile", color: "text-rose-600 bg-rose-50" },
+                      {
+                        name: "系统总览",
+                        icon: BarChart3,
+                        tab: "overview",
+                        color: "text-blue-600 bg-blue-50",
+                      },
+                      {
+                        name: "智能外呼",
+                        icon: Phone,
+                        tab: "smart-call",
+                        color: "text-green-600 bg-green-50",
+                      },
+                      {
+                        name: "客户360",
+                        icon: Users,
+                        tab: "customer-360",
+                        color: "text-purple-600 bg-purple-50",
+                      },
+                      {
+                        name: "营销自动化",
+                        icon: Target,
+                        tab: "marketing",
+                        color: "text-pink-600 bg-pink-50",
+                      },
+                      {
+                        name: "客户管理",
+                        icon: Users,
+                        tab: "customer-mgmt",
+                        color: "text-orange-600 bg-orange-50",
+                      },
+                      {
+                        name: "号码库",
+                        icon: Database,
+                        tab: "phone-db",
+                        color: "text-teal-600 bg-teal-50",
+                      },
+                      {
+                        name: "智能表单",
+                        icon: FileText,
+                        tab: "forms",
+                        color: "text-indigo-600 bg-indigo-50",
+                      },
+                      {
+                        name: "移动应用",
+                        icon: Smartphone,
+                        tab: "mobile",
+                        color: "text-rose-600 bg-rose-50",
+                      },
                     ].map((module, index) => (
                       <Button
                         key={index}
@@ -496,7 +663,9 @@ export default function CustomerServicePlatform() {
                         onClick={() => handleTabChange(module.tab)}
                       >
                         <module.icon className="w-6 h-6" />
-                        <span className="text-xs font-medium">{module.name}</span>
+                        <span className="text-xs font-medium">
+                          {module.name}
+                        </span>
                       </Button>
                     ))}
                   </div>
@@ -541,5 +710,5 @@ export default function CustomerServicePlatform() {
         </Tabs>
       </div>
     </div>
-  )
+  );
 }
