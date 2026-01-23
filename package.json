@@ -20,8 +20,15 @@
   "scripts": {
     "analyze": "ANALYZE=true next build",
     "build": "next build",
-    "db:migrate": "echo 'Database migration placeholder'",
-    "db:seed": "echo 'Database seeding placeholder'",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio",
+    "db:reset": "prisma migrate reset",
+    "db:push": "prisma db push",
+    "db:status": "prisma migrate status",
+    "db:verify": "tsx scripts/verify-db.ts",
     "deploy:dev": "tsx scripts/deploy.ts development",
     "deploy:prod": "tsx scripts/deploy.ts production",
     "deploy:staging": "tsx scripts/deploy.ts staging",
@@ -55,6 +62,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
+    "@prisma/client": "5.22.0",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-aspect-ratio": "^1.1.8",
@@ -83,6 +91,7 @@
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.8",
     "autoprefixer": "^10.4.20",
+    "bcryptjs": "^3.0.3",
     "child_process": "latest",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -96,6 +105,7 @@
     "next": "15.4.10",
     "next-themes": "latest",
     "path": "latest",
+    "prisma": "5.22.0",
     "react": "^19",
     "react-day-picker": "latest",
     "react-dom": "^19",
@@ -113,6 +123,7 @@
     "@playwright/test": "^1.48.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
+    "@types/bcryptjs": "^3.0.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22",
     "@types/react": "^19",
@@ -133,6 +144,9 @@
     "tailwindcss": "^3.4.17",
     "tsx": "^4.19.2",
     "typescript": "^5"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "engines": {
     "node": ">=18.0.0",

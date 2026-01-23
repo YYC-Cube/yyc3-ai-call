@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   # ==================== 主应用服务 ====================
@@ -29,7 +29,13 @@ services:
       - yyc-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -67,6 +73,32 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+  # ==================== pgAdmin 数据库管理 ====================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: yyc-ai-calling-pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL:-admin@yyc3.com}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD:-admin123}
+      - PGADMIN_CONFIG_SERVER_MODE=False
+      - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - yyc-network
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    profiles:
+      - dev
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
 
   # ==================== Redis 缓存 ====================
   redis:
@@ -108,7 +140,15 @@ services:
       - yyc-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--tries=1",
+          "--spider",
+          "http://localhost/health",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -130,3 +170,5 @@ volumes:
     name: yyc-redis-data
   nginx-logs:
     name: yyc-nginx-logs
+  pgadmin-data:
+    name: yyc-pgadmin-data

@@ -1,35 +1,45 @@
 # 🚀 Phase 2 启动指南 - 即刻开始
 
 **时间**: 2026-01-23  
-**状态**: ✅ Phase 2.2 (E2E 框架) 100% 完成，Phase 2.1 (数据库) 待启动
+**状态**: ✅ Phase 2.1 (数据库) 100% 完成，✅ Phase 2.2 (E2E 框架) 100% 完成  
+**当前进度**: 2/5 完成 (40%)
 
 ---
 
 ## 📋 快速清单
 
-### ✅ 已完成 (Phase 2.2)
+### ✅ 已完成 (Phase 2.1 & 2.2)
 
 ```bash
 # 确认状态
+✅ PostgreSQL 16 + Prisma 5.22.0 已配置
+✅ 8 个核心数据模型已定义
+✅ 191 条种子数据已填充
+✅ 数据库健康检查通过
+✅ pgAdmin 管理界面已就绪
 ✅ Playwright E2E 框架已配置
 ✅ 58 个测试用例已创建
 ✅ 5 个浏览器/设备已配置
 ✅ 所有浏览器驱动已安装
 ✅ HTML 报告生成器已就绪
-✅ 测试文档完整
-✅ Phase 2 规划完成
 ```
 
 ### 🚀 立即可执行
 
 ```bash
-# 1. 启动应用服务器
+# 1. 启动数据库 (如未启动)
+docker-compose up -d postgres
+
+# 2. 验证数据库
+pnpm db:verify
+
+# 3. 启动应用服务器
 pnpm dev
 
-# 2. (新终端) 运行 E2E 测试
+# 4. (新终端) 运行 E2E 测试
 pnpm exec playwright test tests/e2e/
 
-# 3. 查看报告
+# 5. 查看报告
 pnpm exec playwright show-report
 ```
 
@@ -41,11 +51,11 @@ pnpm exec playwright show-report
 
 ```
 └─ Phase 2 (16-26 天 | 关键路径 13-19 天)
-   ├─ 2.1 数据库集成 (3-5 天) ← 优先执行
-   │  ├─ PostgreSQL Docker 配置 (1 天)
-   │  ├─ Prisma Schema 定义 (1 天)
-   │  ├─ 数据迁移 & 种子数据 (1-2 天)
-   │  └─ 数据库验证 (0.5 天)
+  ├─ 2.1 数据库集成 (3-5 天) ← ✅ 已完成
+  │  ├─ PostgreSQL Docker 配置 (1 天) ✅
+  │  ├─ Prisma Schema 定义 (1 天) ✅
+  │  ├─ 数据迁移 & 种子数据 (1-2 天) ✅
+  │  └─ 数据库验证 (0.5 天) ✅
    │
    ├─ 2.2 E2E 测试框架 (2-3 天) ← ✅ 已完成
    │  ├─ Playwright 配置 ✅
