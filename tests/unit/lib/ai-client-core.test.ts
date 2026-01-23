@@ -73,3 +73,164 @@ describe("AIClient core methods", () => {
     spy.mockRestore();
   });
 });
+
+describe("AIClient.chat advanced", () => {
+  beforeEach(() => {
+    // @ts-expect-error test shim
+    global.fetch = jest.fn();
+  });
+
+  afterEach(() => {
+    // @ts-expect-error test shim
+    global.fetch.mockReset?.();
+  });
+
+  it("throws error with status and statusText when response not ok", async () => {
+    // @ts-expect-error test shim
+    global.fetch.mockResolvedValue({
+      ok: false,
+      status: 502,
+      statusText: "Bad Gateway",
+      text: async () => "detailed error",
+    });
+
+    const client = new AIClient("http://x", "m");
+    await expect(client.chat([{ role: "user", content: "hi" }])).rejects.toThrow(
+      /502.*Bad Gateway.*detailed error/,
+    );
+  });
+
+  it("throws error on timeout via AbortController", async () => {
+    // @ts-expect-error test shim
+    global.fetch.mockImplementation(
+      (_url: string, init: any) => {
+        const { signal } = init;
+        // Simulate timeout by triggering abort
+        signal.dispatchEvent(new Event("abort"));
+        return Promise.reject(new Error("The operation was aborted"));
+      },
+    );
+
+    const client = new AIClient("http://x", "m", 100);
+    await expect(client.chat([{ role: "user", content: "hi" }])).rejects.toThrow(
+      /aborted|timeout/i,
+    );
+  });
+
+  it("clears timeout after successful response", async () => {
+    const clearTimeoutSpy = jest.spyOn(global, "clearTimeout");
+    // @ts-expect-error test shim
+    global.fetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        id: "123",
+        choices: [{ message: { role: "assistant", content: "ok" } }],
+        usage: { prompt_tokens: 1, completion_tokens: 1, total_tokens: 2 },
+      }),
+    });
+
+    const client = new AIClient("http://x", "m");
+    await client.chat([{ role: "user", content: "hi" }]);
+    expect(clearTimeoutSpy).toHaveBeenCalled();
+    clearTimeoutSpy.mockRestore();
+  });
+});
+
+describe("AIClient.getModels advanced", () => {
+  beforeEach(() => {
+    // @ts-expect-error test shim
+    global.fetch = jest.fn();
+  });
+
+  afterEach(() => {
+    // @ts-expect-error test shim
+    global.fetch.mockReset?.();
+  });
+
+  it("throws error when response not ok", async () => {
+    // @ts-expect-error test shim
+    global.fetch.mockResolvedValue({
+      ok: false,
+      statusText: "Unauthorized",
+    });
+
+    const client = new AIClient("http://x", "m");
+    await expect(client.getModels()).rejects.toThrow(/Failed to fetch models.*Unauthorized/i);
+  });
+
+  it("returns empty array when data is undefined", async () => {
+    // @ts-expect-error test shim
+    global.fetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({}),
+    });
+
+    const client = new AIClient("http://x", "m");
+    const models = await client.getModels();
+    expect(models).toEqual([]);
+  });
+
+  it("handles malformed response structure gracefully", async () => {
+    // @ts-expect-error test shim
+    global.fetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({ data: "not an array" }),
+    });
+
+    const client = new AIClient("http://x", "m");
+    const models = await client.getModels();
+    expect(models).toEqual([]);
+  });
+
+  it("extracts model ids from data array", async () => {
+    // @ts-expect-error test shim
+    global.fetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        data: [
+          { id: "model-1", name: "Model 1" },
+          { id: "model-2", name: "Model 2" },
+        ],
+      }),
+    });
+
+    const client = new AIClient("http://x", "m");
+    const models = await client.getModels();
+    expect(models).toEqual(["model-1", "model-2"]);
+  });
+});
+
+describe("AIClient.healthCheck advanced", () => {
+  it("returns false when getModels throws", async () => {
+    const client = new AIClient("http://x", "m");
+    const spy = jest
+      .spyOn(client, "getModels")
+      .mockRejectedValue(new Error("connection failed"));
+
+    const healthy = await client.healthCheck();
+    expect(healthy).toBe(false);
+    spy.mockRestore();
+  });
+
+  it("returns true when getModels returns non-empty array", async () => {
+    const client = new AIClient("http://x", "m");
+    const spy = jest
+      .spyOn(client, "getModels")
+      .mockResolvedValue(["model-1", "model-2"]);
+
+    const healthy = await client.healthCheck();
+    expect(healthy).toBe(true);
+    spy.mockRestore();
+  });
+
+  it("returns false when getModels returns empty array", async () => {
+    const client = new AIClient("http://x", "m");
+    const spy = jest
+      .spyOn(client, "getModels")
+      .mockResolvedValue([]);
+
+    const healthy = await client.healthCheck();
+    expect(healthy).toBe(false);
+    spy.mockRestore();
+  });
+});
