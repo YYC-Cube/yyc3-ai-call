@@ -15,6 +15,6 @@ const nextConfig = {
   onDemandEntries: {
     maxInactiveAge: 0,
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;
