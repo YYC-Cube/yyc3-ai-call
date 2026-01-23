@@ -95,26 +95,24 @@ describe("AIClient.chat advanced", () => {
     });
 
     const client = new AIClient("http://x", "m");
-    await expect(client.chat([{ role: "user", content: "hi" }])).rejects.toThrow(
-      /502.*Bad Gateway.*detailed error/,
-    );
+    await expect(
+      client.chat([{ role: "user", content: "hi" }]),
+    ).rejects.toThrow(/502.*Bad Gateway.*detailed error/);
   });
 
   it("throws error on timeout via AbortController", async () => {
     // @ts-expect-error test shim
-    global.fetch.mockImplementation(
-      (_url: string, init: any) => {
-        const { signal } = init;
-        // Simulate timeout by triggering abort
-        signal.dispatchEvent(new Event("abort"));
-        return Promise.reject(new Error("The operation was aborted"));
-      },
-    );
+    global.fetch.mockImplementation((_url: string, init: any) => {
+      const { signal } = init;
+      // Simulate timeout by triggering abort
+      signal.dispatchEvent(new Event("abort"));
+      return Promise.reject(new Error("The operation was aborted"));
+    });
 
     const client = new AIClient("http://x", "m", 100);
-    await expect(client.chat([{ role: "user", content: "hi" }])).rejects.toThrow(
-      /aborted|timeout/i,
-    );
+    await expect(
+      client.chat([{ role: "user", content: "hi" }]),
+    ).rejects.toThrow(/aborted|timeout/i);
   });
 
   it("clears timeout after successful response", async () => {
@@ -155,7 +153,9 @@ describe("AIClient.getModels advanced", () => {
     });
 
     const client = new AIClient("http://x", "m");
-    await expect(client.getModels()).rejects.toThrow(/Failed to fetch models.*Unauthorized/i);
+    await expect(client.getModels()).rejects.toThrow(
+      /Failed to fetch models.*Unauthorized/i,
+    );
   });
 
   it("returns empty array when data is undefined", async () => {
@@ -225,9 +225,7 @@ describe("AIClient.healthCheck advanced", () => {
 
   it("returns false when getModels returns empty array", async () => {
     const client = new AIClient("http://x", "m");
-    const spy = jest
-      .spyOn(client, "getModels")
-      .mockResolvedValue([]);
+    const spy = jest.spyOn(client, "getModels").mockResolvedValue([]);
 
     const healthy = await client.healthCheck();
     expect(healthy).toBe(false);

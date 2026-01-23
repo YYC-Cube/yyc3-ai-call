@@ -25,6 +25,7 @@ export async function POST(request: Request) {
       max_tokens,
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return new NextResponse(stream as any, {
       status: 200,
       headers: {

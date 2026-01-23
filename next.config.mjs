@@ -9,6 +9,12 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  experimental: {
+    isrMemoryCacheSize: 0, // Disable ISR
+  },
+  onDemandEntries: {
+    maxInactiveAge: 0,
+  },
 }
 
 export default nextConfig
