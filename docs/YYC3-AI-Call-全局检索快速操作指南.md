@@ -1,8 +1,22 @@
 # YYC³ AI 全局检索 - 快速操作指南
 
-**生成时间**: 2026年1月23日 14:30  
-**系统版本**: v1.0.0  
-**前端状态**: ✅ 运行中 (localhost:3000)
+**生成时间**: 2026年1月23日 16:45  
+**系统版本**: v1.0.1  
+**前端状态**: ✅ 运行中 (localhost:3000)  
+**E2E 测试**: ✅ 就绪 (Playwright 已配置)  
+**数据库**: 🚧 Phase 2 进行中 (PostgreSQL 计划)
+
+---
+
+## 📊 当前进度
+
+| 阶段 | 内容 | 进度 | 状态 |
+|------|------|------|------|
+| Phase 1 | 代码质量 & 单元测试 | 100% | ✅ 完成 |
+| Phase 2.2 | E2E 测试框架 | 100% | ✅ 完成 |
+| Phase 2.1 | 数据库集成 | 0% | 🚧 待执行 |
+| Phase 2.3 | API 持久化 | 0% | 🚧 依赖 2.1 |
+| Phase 2.4 | 性能优化 | 0% | 📅 计划中 |
 
 ---
 
@@ -486,6 +500,83 @@ pnpm docker:logs
 
 ---
 
+## 🧪 E2E 测试快速开始
+
+### 测试框架信息
+
+**框架**: Playwright  
+**浏览器**: Chromium, Firefox, WebKit  
+**移动设备**: Pixel 5 (Android), iPhone 12 (iOS)  
+**配置文件**: `playwright.config.ts` ✅ 已创建  
+**浏览器驱动**: ✅ 已安装
+
+### 快速启动
+
+```bash
+# 终端 1: 启动开发服务器
+pnpm dev
+
+# 终端 2: 运行所有 E2E 测试
+pnpm exec playwright test tests/e2e/
+
+# 或运行单个测试文件
+pnpm exec playwright test tests/e2e/01-homepage.spec.ts
+
+# UI 模式 (交互式)
+pnpm exec playwright test --ui
+
+# 生成并查看 HTML 报告
+pnpm exec playwright test
+pnpm exec playwright show-report
+```
+
+### 测试文件清单
+
+| 文件 | 测试数 | 覆盖范围 | 状态 |
+|------|--------|--------|------|
+| `01-homepage.spec.ts` | 7 | 首页、导航、响应式 | ✅ 就绪 |
+| `02-customer-management.spec.ts` | 12 | 客户管理 CRUD | 🚧 需要 DB |
+| `03-analytics.spec.ts` | 12 | 仪表板、图表、导出 | ✅ 就绪 |
+| `04-smart-call-system.spec.ts` | 12 | 外呼系统、通话记录 | ✅ 就绪 |
+| `05-api-integration.spec.ts` | 15 | API 调用、错误处理 | 🚧 需要 DB |
+
+**总计**: 58 个 E2E 测试用例
+
+### 详细文档
+
+📖 完整的 E2E 测试指南: [tests/e2e/README.md](../tests/e2e/README.md)
+
+---
+
+## 🗄️ Phase 2 数据库集成 (下一步)
+
+### 准备工作
+
+```bash
+# 1. 检查 Docker 是否运行
+docker --version
+
+# 2. 验证 docker-compose
+docker-compose --version
+
+# 3. (即将) 启动数据库
+pnpm docker:run  # 需要在 Phase 2.1 实现
+```
+
+### 计划的工作
+
+| 步骤 | 任务 | 时间 | 优先级 |
+|------|------|------|--------|
+| 2.1.1 | PostgreSQL Docker 配置 | 1 天 | 🔴 P0 |
+| 2.1.2 | Prisma Schema 定义 | 1 天 | 🔴 P0 |
+| 2.1.3 | 数据库迁移 & 种子数据 | 1 天 | 🔴 P0 |
+| 2.3.1 | API 持久化实现 | 2 天 | 🔴 P0 |
+| 2.3.2 | E2E 测试验证 | 1 天 | 🟡 P1 |
+
+**预计完成**: 2-3 周
+
+---
+
 ## 📋 已知问题与解决方案状态
 
 ### ✅ 已解决
@@ -498,7 +589,7 @@ pnpm docker:logs
 | API 测试环保    | NextRequest/NextResponse 在 jsdom 下未定义 | Mock next/server 模块                            | ✅ 已解决 |
 | act() 警告      | 异步状态更新未在 act() 内                  | 使用 await act(async () => {}) 包装              | ✅ 已解决 |
 
-### ⚠️ 阶段后续工作（可选）
+### 🚧 后续改进 (Phase 2.4)
 
 | 项目       | 优先级 | 描述                     | 建议                        |
 | ---------- | ------ | ------------------------ | --------------------------- |
