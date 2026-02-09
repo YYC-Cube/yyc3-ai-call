@@ -43,7 +43,7 @@
     "postinstall": "echo '✅ YYC³ AI Intelligent Calling dependencies installed'",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "prepare": "husky install",
+    "prepare": "husky",
     "start": "next start",
     "test": "jest",
     "test:coverage": "jest --coverage",
